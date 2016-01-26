@@ -13,6 +13,12 @@ fi
 if [ ! -z "$SLAVE_EXECUTORS" ]; then
   PARAMS="$PARAMS -executors $SLAVE_EXECUTORS"
 fi
+if [ ! -z "$SLAVE_LABELS" ]; then
+  PARAMS="$PARAMS -labels $SLAVE_LABELS"
+fi
+if [ ! -z "$SLAVE_NAME" ]; then
+  PARAMS="$PARAMS -name $SLAVE_NAME"
+fi
 if [ ! -z "$JENKINS_MASTER" ]; then
   PARAMS="$PARAMS -master $JENKINS_MASTER"
 else

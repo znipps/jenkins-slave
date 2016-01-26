@@ -19,3 +19,5 @@ You can specify optional environment variables below when invoking docker run to
 | Parameter       | Default Value       | Description                                                                |
 |-----------------|---------------------|----------------------------------------------------------------------------|
 | SLAVE_EXECUTORS | number of cpu cores | This value specifies the number of concurrent jobs this worker can process |
+| SLAVE_NAME      | swarm-client        | This value specifies the name of slave that will appear on Jenkins UI      |
+| SLAVE_LABELS    | None                | This value specifies the labels you want to give for the launching slave   |
