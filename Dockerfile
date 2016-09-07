@@ -13,13 +13,12 @@ ENV PATH $JAVA_HOME/bin:$PATH
 # apparmor is required to run docker server within docker container
 RUN apt-get update -qq && apt-get install -qqy wget curl git iptables ca-certificates apparmor
 
-ENV JENKINS_SWARM_VERSION 1.26
+ENV JENKINS_SWARM_VERSION 2.2
 ENV HOME /home/jenkins-slave
 
 
 RUN useradd -c "Jenkins Slave user" -d $HOME -m jenkins-slave
-RUN curl --create-dirs -sSLo $HOME/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar http://maven.jenkins-ci.org/content/repositories/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar
-
+RUN curl --create-dirs -sSLo $HOME/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$JENKINS_SWARM_VERSION/swarm-client-$JENKINS_SWARM_VERSION-jar-with-dependencies.jar
 ADD cmd.sh /cmd.sh
 
 # set our wrapper
@@ -27,12 +26,13 @@ ENTRYPOINT ["/usr/local/bin/docker-wrapper"]
 
 # setup our local files first
 ADD docker-wrapper.sh /usr/local/bin/docker-wrapper
+RUN chmod +x /usr/local/bin/docker-wrapper
 
 # now we install docker in docker - thanks to https://github.com/jpetazzo/dind
 # We install newest docker into our docker in docker container
-ADD https://get.docker.io/builds/Linux/x86_64/docker-latest /usr/local/bin/docker
-RUN chmod +x /usr/local/bin/docker
-RUN chmod +x /usr/local/bin/docker-wrapper
+RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-latest.tgz \
+  && tar --strip-components=1 -xvzf docker-latest.tgz -C /usr/local/bin \
+  && chmod +x /usr/local/bin/docker
 
 VOLUME /var/lib/docker
 

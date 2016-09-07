@@ -96,5 +96,14 @@ popd >/dev/null
 # delete it so that docker can start.
 rm -rf /var/run/docker.pid
 
-docker -d &
+docker daemon $DOCKER_DAEMON_ARGS &
+(( timeout = 60 + SECONDS ))
+until docker info >/dev/null 2>&1
+do
+  if (( SECONDS >= timeout )); then
+    echo 'Timed out trying to connect to internal docker host.' >&2
+    break
+  fi
+  sleep 1
+done
 exec "$@"
