@@ -3,7 +3,9 @@
 # jenkins swarm slave
 JAR=`ls -1 $HOME/swarm-client-*.jar | tail -n 1`
 
-PARAMS=""
+#FIX JENKINS-44210
+#But Fix is already merged. But no new plugin release was done since that time.
+PARAMS="-sslFingerprints ''"
 if [ ! -z "$JENKINS_USERNAME" ]; then
   PARAMS="$PARAMS -username $JENKINS_USERNAME"
 fi
